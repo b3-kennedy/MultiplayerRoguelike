@@ -1,28 +1,56 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Gun : MonoBehaviour
 {
 
     public GunData gunData;
-    bool isAiming;
-    float aimProgress;
+    protected bool isAiming;
+    protected float aimProgress;
+
+    protected float shootTimer;
+
+    public LayerMask layerMask;
+
+    GameObject cam;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         transform.localPosition = gunData.position;
+        shootTimer = gunData.fireRate;
+        cam = transform.parent.parent.gameObject;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         Aiming();
+        Shoot();
+    }
+
+    public virtual void Shoot()
+    {
+
     }
 
     public bool IsADS()
     {
         return isAiming;
+    }
+
+    public virtual void Raycast()
+    {
+        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, 1000,layerMask))
+        {
+            if(hit.collider.GetComponent<Health>())
+            {
+                ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
+                ServerManager.Instance.DealDamageServerRpc(id, gunData.damage);
+            }
+        }
     }
 
     void Aiming()

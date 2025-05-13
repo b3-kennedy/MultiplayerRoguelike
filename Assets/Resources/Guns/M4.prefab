@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4943116146373074}
   - component: {fileID: 33661175068508146}
   - component: {fileID: 23811254410898120}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4447501396310302}
   - component: {fileID: 33842171440594022}
   - component: {fileID: 23756309835210046}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 4492418250398880}
   - component: {fileID: 33840627068739742}
   - component: {fileID: 23253818614242246}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rear_Sight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -270,7 +270,7 @@ GameObject:
   - component: {fileID: 4769015732098110}
   - component: {fileID: 33558205602987944}
   - component: {fileID: 23139117911808418}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bullets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +356,7 @@ GameObject:
   - component: {fileID: 4634648986345286}
   - component: {fileID: 33877497192894472}
   - component: {fileID: 23942935746535512}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,8 +442,8 @@ GameObject:
   - component: {fileID: 4986156666290084}
   - component: {fileID: 33502295816338324}
   - component: {fileID: 23506917151157498}
-  - component: {fileID: 506975962133360986}
-  m_Layer: 0
+  - component: {fileID: 5273090678230839774}
+  m_Layer: 6
   m_Name: M4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +523,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &506975962133360986
+--- !u!114 &5273090678230839774
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -532,10 +532,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1889367776384038}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acddb7f4401248f45b10f799fcf6e82f, type: 3}
+  m_Script: {fileID: 11500000, guid: f32d0c1dc86fb374abb94f332a274581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gunData: {fileID: 11400000, guid: 13bf152bd7efc3b4b9984618285dcc10, type: 2}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 55
 --- !u!1 &1905431840038674
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,7 +550,7 @@ GameObject:
   - component: {fileID: 4415432497345528}
   - component: {fileID: 33185006359280260}
   - component: {fileID: 23379368989142260}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sight
   m_TagString: Untagged
   m_Icon: {fileID: 0}

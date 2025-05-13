@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: M4
   m_EditorClassIdentifier: 
   gunName: M4
-  fireRate: 0.5
+  fireRate: 0.2
   damage: 50
   magazineSize: 30
   reloadTime: 2
