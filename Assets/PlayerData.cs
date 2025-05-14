@@ -12,4 +12,9 @@ public class PlayerData : NetworkBehaviour
     {
         return transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
     }
+
+    public Transform GetGunParent()
+    {
+        return transform.Find("CameraHolder/Recoil/Camera/GunPosition");
+    }
 }
