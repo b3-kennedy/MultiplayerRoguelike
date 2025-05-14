@@ -10,6 +10,6 @@ public class PlayerData : NetworkBehaviour
 
     public GameObject GetCameraGameObject()
     {
-        return transform.GetChild(1).gameObject;
+        return transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
     }
 }

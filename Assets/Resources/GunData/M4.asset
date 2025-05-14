@@ -20,3 +20,8 @@ MonoBehaviour:
   position: {x: -0.134, y: -0.179, z: -0.368}
   adsPosition: {x: 0, y: -0.1097, z: -0.178}
   adsTime: 5
+  recoilX: -2
+  recoilY: 2
+  recoilZ: 0.35
+  snap: 6
+  returnSpeed: 2

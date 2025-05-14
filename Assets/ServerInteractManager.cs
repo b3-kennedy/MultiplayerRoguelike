@@ -52,7 +52,7 @@ public class ServerInteractManager : NetworkBehaviour
         if(guns.TryGetValue(gunName, out var gun))
         {
             Debug.Log(gunName);
-            Transform gunPos = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.GetChild(1).GetChild(0);
+            Transform gunPos = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("CameraHolder/Recoil/Camera/GunPosition");
             GameObject spawnedGun = Instantiate(gun, gunPos);
             gunPos.GetComponent<GunSway>().InitializeGun();
             gunPos.GetComponent<GunBob>().InitializeGun();

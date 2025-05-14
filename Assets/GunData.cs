@@ -13,5 +13,13 @@ public class GunData : ScriptableObject
     public Vector3 adsPosition;
     public float adsTime;
 
+    [Header("Recoil")]
+    public float recoilX;
+    public float recoilY;
+    public float recoilZ;
+
+    public float snap;
+    public float returnSpeed;
+
     
 }

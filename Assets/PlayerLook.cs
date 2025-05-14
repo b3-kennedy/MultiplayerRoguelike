@@ -23,8 +23,8 @@ public class PlayerLook : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         if(!IsOwner)
         {
-            cam.GetComponent<Camera>().enabled = false;
-            cam.GetComponent<AudioListener>().enabled = false;
+            cam.transform.GetChild(0).GetChild(0).GetComponent<Camera>().enabled = false;
+            cam.transform.GetChild(0).GetChild(0).GetComponent<AudioListener>().enabled = false;
             playerVisor.layer = 0;
         }
 

@@ -13,6 +13,7 @@ public class AutomaticGun : Gun
         {
             
             base.Raycast();
+            base.Recoil();
             shootTimer -= gunData.fireRate;
         }
     }

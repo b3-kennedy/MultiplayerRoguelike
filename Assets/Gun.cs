@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Rendering;
 
 public class Gun : MonoBehaviour
@@ -17,6 +18,8 @@ public class Gun : MonoBehaviour
 
     GameObject cam;
 
+    Recoil recoil;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,7 +27,9 @@ public class Gun : MonoBehaviour
         if(transform.parent && transform.parent.name == "GunPosition")
         {
             cam = transform.parent.parent.gameObject;
-            playerData = transform.parent.parent.parent.GetComponent<PlayerData>();
+            playerData = transform.parent.parent.parent.parent.parent.GetComponent<PlayerData>();
+            recoil = transform.parent.parent.parent.GetComponent<Recoil>();
+            recoil.SetData(gunData.recoilX, gunData.recoilY, gunData.recoilZ, gunData.snap, gunData.returnSpeed);
             GetComponent<Rigidbody>().isKinematic = true;
             GetComponent<Collider>().enabled = false;
             transform.localPosition = gunData.position;
@@ -39,6 +44,7 @@ public class Gun : MonoBehaviour
         
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -46,6 +52,11 @@ public class Gun : MonoBehaviour
 
         Aiming();
         Shoot();
+    }
+
+    public void Recoil()
+    {
+        recoil.RecoilFire();
     }
 
     public virtual void Shoot()
