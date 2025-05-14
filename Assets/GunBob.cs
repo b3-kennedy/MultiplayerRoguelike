@@ -29,14 +29,24 @@ public class GunBob : MonoBehaviour
         originalOffset = follower.offset;
         normalIntensity = intensity;
         normalIntensityX = intensityX;
-        gunData = transform.GetChild(0).GetComponent<Gun>().gunData;
-        gun = transform.GetChild(0).GetComponent<Gun>();
+        InitializeGun();
+
         
+    }
+
+    public void InitializeGun()
+    {
+        if(transform.childCount > 0)
+        {
+            gunData = transform.GetChild(0).GetComponent<Gun>().gunData;
+            gun = transform.GetChild(0).GetComponent<Gun>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!gun) return;
 
         if (gun.IsADS())
         {

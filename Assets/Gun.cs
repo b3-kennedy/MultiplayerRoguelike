@@ -13,20 +13,37 @@ public class Gun : MonoBehaviour
 
     public LayerMask layerMask;
 
+    PlayerData playerData;
+
     GameObject cam;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        transform.localPosition = gunData.position;
-        shootTimer = gunData.fireRate;
-        cam = transform.parent.parent.gameObject;
+
+        if(transform.parent && transform.parent.name == "GunPosition")
+        {
+            cam = transform.parent.parent.gameObject;
+            playerData = transform.parent.parent.parent.GetComponent<PlayerData>();
+            GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<Collider>().enabled = false;
+            transform.localPosition = gunData.position;
+            shootTimer = gunData.fireRate;
+        }
+        else if(!transform.parent)
+        {
+            enabled = false;
+            GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<Collider>().enabled = true;
+        }
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!playerData || !playerData.GetOwnership()) return;
+
         Aiming();
         Shoot();
     }

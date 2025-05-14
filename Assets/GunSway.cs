@@ -28,15 +28,27 @@ public class GunSway : MonoBehaviour
     {
         initialRot = transform.localRotation;
         normalRotSway = rotSwayMultiplier;
-        gun = transform.GetChild(0);
-        gunStartPos = gun.localPosition;
-        gunScript = gun.GetComponent<Gun>();
+        InitializeGun();
         
+
+        
+    }
+
+    public void InitializeGun()
+    {
+        if(transform.childCount > 0)
+        {
+            gun = transform.GetChild(0);
+            gunStartPos = gun.localPosition;
+            gunScript = gun.GetComponent<Gun>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!gun) return;
+
         MouseSway();
         RotSway();
         MoveGun();

@@ -9,7 +9,6 @@ public class Health : NetworkBehaviour
     public void TakeDamageClientRpc(float damage)
     {
         health -= damage;
-        Debug.Log("deal damage client");
         if(health <= 0)
         {
             

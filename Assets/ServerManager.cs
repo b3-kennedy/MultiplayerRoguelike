@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class ServerManager : NetworkBehaviour
 
     void Awake()
     {
+        Debug.Log("hello");
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -14,6 +16,11 @@ public class ServerManager : NetworkBehaviour
         }
 
         Instance = this;
+    }
+
+    void Start()
+    {
+        
     }
 
 
@@ -25,9 +32,10 @@ public class ServerManager : NetworkBehaviour
             Health healthScript = obj.GetComponent<Health>();
             if(healthScript)
             {
-                Debug.Log("deal damahe server");
                 healthScript.TakeDamageClientRpc(damage);
             }
         }
     }
 }
+
+
