@@ -9,11 +9,13 @@ public class AutomaticGun : Gun
             shootTimer += Time.deltaTime;
         }
         
-        if(Input.GetButton("Fire1") && shootTimer >= gunData.fireRate)
+        if(Input.GetButton("Fire1") && shootTimer >= gunData.fireRate && ammo > 0)
         {
             
             base.Raycast();
             base.Recoil();
+            anim.SetTrigger("shoot");
+            ammo--;
             shootTimer -= gunData.fireRate;
         }
     }

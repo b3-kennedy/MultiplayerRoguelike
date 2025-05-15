@@ -38,7 +38,7 @@ public class GunSway : MonoBehaviour
     {
         if(transform.childCount > 0)
         {
-            gun = transform.GetChild(0);
+            gun = transform.GetChild(0).GetChild(0);
             gunStartPos = gun.localPosition;
             gunScript = gun.GetComponent<Gun>();
         }

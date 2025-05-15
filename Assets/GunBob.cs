@@ -38,8 +38,8 @@ public class GunBob : MonoBehaviour
     {
         if(transform.childCount > 0)
         {
-            gunData = transform.GetChild(0).GetComponent<Gun>().gunData;
-            gun = transform.GetChild(0).GetComponent<Gun>();
+            gunData = transform.GetChild(0).GetChild(0).GetComponent<Gun>().gunData;
+            gun = transform.GetChild(0).GetChild(0).GetComponent<Gun>();
         }
     }
 

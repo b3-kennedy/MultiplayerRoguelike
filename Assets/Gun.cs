@@ -20,26 +20,32 @@ public class Gun : MonoBehaviour
 
     Recoil recoil;
 
+    protected int ammo;
+
+    protected Animator anim;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
-        if(transform.parent && transform.parent.name == "GunPosition")
+        if (transform.parent && transform.parent.parent.name == "GunPosition")
         {
-            cam = transform.parent.parent.gameObject;
-            playerData = transform.parent.parent.parent.parent.parent.GetComponent<PlayerData>();
-            recoil = transform.parent.parent.parent.GetComponent<Recoil>();
+            ammo = gunData.magazineSize;
+            cam = transform.parent.parent.parent.gameObject;
+            playerData = transform.parent.parent.parent.parent.parent.parent.GetComponent<PlayerData>();
+            recoil = transform.parent.parent.parent.parent.GetComponent<Recoil>();
             recoil.SetData(gunData.recoilX, gunData.recoilY, gunData.recoilZ, gunData.snap, gunData.returnSpeed);
-            GetComponent<Rigidbody>().isKinematic = true;
-            GetComponent<Collider>().enabled = false;
-            transform.localPosition = gunData.position;
+            transform.parent.GetComponent<Rigidbody>().isKinematic = true;
+            transform.parent.GetComponent<Collider>().enabled = false;
+            transform.parent.localPosition = gunData.position;
             shootTimer = gunData.fireRate;
+            anim = transform.parent.GetComponent<Animator>();
         }
-        else if(!transform.parent)
+        else if (!transform.parent)
         {
             enabled = false;
-            GetComponent<Rigidbody>().isKinematic = false;
-            GetComponent<Collider>().enabled = true;
+            transform.parent.GetComponent<Rigidbody>().isKinematic = false;
+            transform.parent.GetComponent<Collider>().enabled = true;
         }
         
     }
@@ -104,6 +110,6 @@ public class Gun : MonoBehaviour
 
         aimProgress = Mathf.Clamp01(aimProgress);
 
-        transform.localPosition = Vector3.Lerp(gunData.position, gunData.adsPosition, aimProgress);
+        transform.parent.localPosition = Vector3.Lerp(gunData.position, gunData.adsPosition, aimProgress);
     }
 }
