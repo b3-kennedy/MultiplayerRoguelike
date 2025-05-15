@@ -7,6 +7,8 @@ public class BuildSystem : NetworkBehaviour
 
     bool isBuilding = false;
 
+    bool isDestroyMode = false;
+
     PlayerData playerData;
 
     GameObject selectedBlock;
@@ -19,6 +21,9 @@ public class BuildSystem : NetworkBehaviour
     public float gridSizeY = 1f;
 
     public LayerMask layerMask;
+
+    GameObject previouslyHighlightedBlock;
+    Material originalMaterial;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,6 +38,85 @@ public class BuildSystem : NetworkBehaviour
 
         if(!IsOwner) return;
 
+        PlayerInput();
+
+        if(!isBuilding) return;
+
+        PlaceHolder();
+
+        if(!isDestroyMode) return;
+
+        DestroyMode();
+
+    }
+
+    void DestroyMode()
+    {
+        if (selectedBlock)
+        {
+            Destroy(selectedBlock);
+        }
+
+        GameObject blockToDestroy = null;
+
+        // Perform the raycast
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, 100, layerMask))
+        {
+            if (hit.collider.CompareTag("BuildingBlock"))
+            {
+                GameObject hitBlock = hit.collider.gameObject;
+
+                // If we're looking at a new block, revert the previous one
+                if (previouslyHighlightedBlock && hitBlock != previouslyHighlightedBlock)
+                {
+                    // Restore previous material
+                    previouslyHighlightedBlock.GetComponent<MeshRenderer>().material = originalMaterial;
+                    previouslyHighlightedBlock = null;
+                    originalMaterial = null;
+                }
+
+                // Only highlight if not already highlighted
+                if (hitBlock != previouslyHighlightedBlock)
+                {
+                    previouslyHighlightedBlock = hitBlock;
+                    originalMaterial = new Material(hitBlock.GetComponent<MeshRenderer>().material); // Copy original
+
+                    ChangeMaterial(hitBlock, 0.75f, Color.red); // Apply highlight
+                }
+
+                blockToDestroy = hitBlock;
+            }
+            else
+            {
+                //if hit something but not a building block
+                if (previouslyHighlightedBlock)
+                {
+                    previouslyHighlightedBlock.GetComponent<MeshRenderer>().material = originalMaterial;
+                    previouslyHighlightedBlock = null;
+                    originalMaterial = null;
+                }
+            }
+        }
+        else
+        {
+            // If we are not hitting anything, reset the previous highlight
+            if (previouslyHighlightedBlock)
+            {
+                previouslyHighlightedBlock.GetComponent<MeshRenderer>().material = originalMaterial;
+                previouslyHighlightedBlock = null;
+                originalMaterial = null;
+            }
+        }
+
+        // Handle destruction input
+        if (Input.GetButtonDown("Fire1") && blockToDestroy)
+        {
+            ServerBuildManager.Instance.DestroyServerRpc(blockToDestroy.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+    }
+
+    void PlayerInput()
+    {
         if(Input.GetKeyDown(KeyCode.B))
         {
             ChangeBuildMode(!isBuilding);
@@ -40,15 +124,83 @@ public class BuildSystem : NetworkBehaviour
 
         if(!isBuilding) return;
 
-        if(!selectedBlock)
+        if(Input.GetButtonDown("Fire3"))
+        {
+            ChangeDestroyMode(!isDestroyMode);
+        }
+    }
+
+    void ChangeDestroyMode(bool value)
+    {
+        isDestroyMode = value;
+    }
+
+    public void ChangeMaterial(GameObject block, float alpha, Color? newColor = null)
+    {
+        // Clone the material
+        Material selectedBlockMat = new Material(block.GetComponent<MeshRenderer>().material);
+        block.GetComponent<MeshRenderer>().material = selectedBlockMat;
+
+        // Set the surface type to Transparent
+        selectedBlockMat.SetFloat("_Surface", 1f); // 1 = Transparent
+        selectedBlockMat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        selectedBlockMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+
+        // Set blend and depth options for transparency
+        selectedBlockMat.SetInt("_ZWrite", 0);
+        selectedBlockMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        selectedBlockMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        selectedBlockMat.SetOverrideTag("RenderType", "Transparent");
+
+        // Get the current color (from _BaseColor or fallback)
+        Color finalColor;
+        if (selectedBlockMat.HasProperty("_BaseColor"))
+        {
+            finalColor = selectedBlockMat.GetColor("_BaseColor");
+        }
+        else
+        {
+            finalColor = selectedBlockMat.color;
+        }
+
+        // If a new color is provided, update RGB (preserve current if null)
+        if (newColor.HasValue)
+        {
+            finalColor.r = newColor.Value.r;
+            finalColor.g = newColor.Value.g;
+            finalColor.b = newColor.Value.b;
+        }
+
+        // Always update alpha
+        finalColor.a = Mathf.Clamp01(alpha);
+
+        // Apply final color
+        if (selectedBlockMat.HasProperty("_BaseColor"))
+        {
+            selectedBlockMat.SetColor("_BaseColor", finalColor);
+        }
+        else
+        {
+            selectedBlockMat.color = finalColor;
+        }
+    }
+
+    void PlaceHolder()
+    {
+        if(!selectedBlock && !isDestroyMode)
         {
             selectedBlock = Instantiate(wall);
+
+            ChangeMaterial(selectedBlock, 0.75f);
+            
             Collider col = selectedBlock.GetComponent<Collider>();
             if(col)
             {
                 col.enabled = false;
             }
         }
+
+        if(!selectedBlock) return;
 
         if(Physics.Raycast(cam.transform.position, cam.transform.forward,out RaycastHit hit,100,layerMask))
         {
@@ -78,12 +230,12 @@ public class BuildSystem : NetworkBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.R) && selectedBlock)
+        if(Input.GetKeyDown(KeyCode.R))
         {
             selectedBlock.transform.localEulerAngles += new Vector3(0,90,0);
         }
 
-        if(Input.GetButtonDown("Fire1") && selectedBlock)
+        if(Input.GetButtonDown("Fire1"))
         {
             Vector3 blockPos = selectedBlock.transform.position;
             Quaternion blockRot = selectedBlock.transform.rotation;

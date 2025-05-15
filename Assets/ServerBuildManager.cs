@@ -43,13 +43,21 @@ public class ServerBuildManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void BuildServerRpc(string blockName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
     {
-        Debug.Log(blockName);
         if(blocks.TryGetValue(blockName, out var block))
         {
             Vector3 pos = new Vector3(posX,posY,posZ);
             Quaternion rot = new Quaternion(rotX, rotY, rotZ, rotW);
             GameObject spawnedBlock = Instantiate(block, pos, rot);
             spawnedBlock.GetComponent<NetworkObject>().Spawn();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DestroyServerRpc(ulong objectId)
+    {
+        if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out var obj))
+        {
+            obj.Despawn();
         }
     }
 
