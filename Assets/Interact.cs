@@ -8,12 +8,15 @@ public class Interact : MonoBehaviour
     [SerializeField] float interactRange = 5f;
     GameObject cam;
 
+    PlayerInterfaceManager playerInterfaceManager;
+
     public LayerMask layerMask;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         cam = GetComponent<PlayerData>().GetCameraGameObject();
+        playerInterfaceManager = GetComponent<PlayerInterfaceManager>();
     }
 
     // Update is called once per frame

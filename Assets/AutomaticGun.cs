@@ -16,6 +16,7 @@ public class AutomaticGun : Gun
             base.Recoil();
             anim.SetTrigger("shoot");
             ammo--;
+            GetPlayerInterfaceManager().UpdateAmmoText(ammo);
             shootTimer -= gunData.fireRate;
         }
     }

@@ -49,13 +49,16 @@ public class ServerInteractManager : NetworkBehaviour
     [ClientRpc]
     public void PickUpWeaponClientRpc(string gunName, ulong clientId)
     {
-        if(guns.TryGetValue(gunName, out var gun))
+        if (guns.TryGetValue(gunName, out var gun))
         {
             Debug.Log(gunName);
-            Transform gunPos = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("CameraHolder/Recoil/Camera/GunPosition");
+            NetworkObject clientPlayer = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+            Transform gunPos = clientPlayer.transform.Find("CameraHolder/Recoil/Camera/GunPosition");
             GameObject spawnedGun = Instantiate(gun, gunPos);
             gunPos.GetComponent<GunSway>().InitializeGun();
             gunPos.GetComponent<GunBob>().InitializeGun();
+            clientPlayer.GetComponent<PlayerInterfaceManager>().OnGunPickup(spawnedGun);
+            
         }
     }
 }
