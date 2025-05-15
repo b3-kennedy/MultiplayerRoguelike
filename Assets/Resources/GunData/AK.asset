@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2923ecb61c2b6fe46abd93d861369ce1, type: 3}
-  m_Name: M4
+  m_Name: AK
   m_EditorClassIdentifier: 
-  gunName: M4
-  fireRate: 0.1
-  damage: 35
+  gunName: AK
+  fireRate: 0.2
+  damage: 50
   magazineSize: 30
   reloadTime: 2
-  position: {x: -0.134, y: -0.179, z: -0.368}
-  adsPosition: {x: 0, y: -0.1097, z: -0.178}
+  position: {x: -0.134, y: -0.162, z: -0.403}
+  adsPosition: {x: 0, y: -0.044, z: -0.055}
   adsTime: 5
   recoilX: -2
-  recoilY: 2
+  recoilY: 5
   recoilZ: 0.35
   snap: 6
   returnSpeed: 2
