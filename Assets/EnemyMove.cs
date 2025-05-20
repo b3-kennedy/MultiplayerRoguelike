@@ -17,7 +17,6 @@ public class EnemyMove : NetworkBehaviour
         {
             NetworkObject clientPlayer = NetworkManager.Singleton.ConnectedClients[0].PlayerObject;
             target = clientPlayer.transform;
-            Debug.Log(target);
         }
         agent = GetComponent<NavMeshAgent>();
         path = new NavMeshPath();

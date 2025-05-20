@@ -40,6 +40,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public bool isOnLadder;
 
+    bool jumpOffLadder = false;
+
     float targetSpeedOnLand;
 
     bool isSprinting = false;
@@ -76,22 +78,30 @@ public class PlayerMovement : NetworkBehaviour
 
     }
 
-    //public override void OnNetworkSpawn()
-    //{
-    //    if (IsOwner)
-    //    {
-    //        rb.isKinematic = false;
-    //    }
-    //    else
-    //    {
-    //        rb.isKinematic = true;
-    //    }
-    //}
+    void LadderControl()
+    {
+        isOnLadder = CheckIfOnLadder();
+
+        if (isOnLadder && IsGrounded() && vertical < 0)
+        {
+            isOnLadder = false;
+        }
+
+        if (isOnLadder && Input.GetKeyDown(KeyCode.Space))
+        {
+            jumpOffLadder = true;
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         if (!IsOwner) return;
+
+
+        LadderControl();
+
 
         magnitude = rb.linearVelocity.magnitude;
 
@@ -196,6 +206,20 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+
+    bool CheckIfOnLadder()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 1.1f);
+        foreach (var hit in hits)
+        {
+            if (hit.GetComponent<Ladder>())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void OnLand()
     {
         landingSlowdownFactor = (1 - (targetSpeed / 10));
@@ -238,6 +262,11 @@ public class PlayerMovement : NetworkBehaviour
         if (isOnLadder)
         {
             LadderMovement();
+            if (jumpOffLadder)
+            {
+                JumpOffLadder();
+                jumpOffLadder = false;
+            }
             return;
         }
 
@@ -245,6 +274,17 @@ public class PlayerMovement : NetworkBehaviour
 
 
 
+    }
+
+    void JumpOffLadder()
+    {
+        isOnLadder = false;
+
+        // Cancel current vertical motion
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+        // Apply jump force upward
+        rb.AddForce(-orientation.forward * jumpForce/2f, ForceMode.Impulse);
     }
 
     void LadderMovement()
@@ -286,21 +326,5 @@ public class PlayerMovement : NetworkBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-    }
-
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.GetComponent<Ladder>())
-        {
-            isOnLadder = true;
-        }
-    }
-
-    void OnCollisionExit(Collision other)
-    {
-        if (other.collider.GetComponent<Ladder>())
-        {
-            isOnLadder = false;
-        }
     }
 }
