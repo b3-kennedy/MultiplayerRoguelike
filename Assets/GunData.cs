@@ -13,6 +13,8 @@ public class GunData : ScriptableObject
     public Vector3 adsPosition;
     public float adsTime;
 
+    public int penetrationLimit = 1;
+
     [Header("Recoil")]
     public float recoilX;
     public float recoilY;

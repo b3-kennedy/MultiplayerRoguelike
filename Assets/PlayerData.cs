@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class PlayerData : NetworkBehaviour
 {
+
+    public override void OnNetworkSpawn()
+    {
+        
+    }
     public bool GetOwnership()
     {
         return IsOwner;

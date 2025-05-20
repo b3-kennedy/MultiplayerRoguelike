@@ -13,7 +13,11 @@ public class BuildSystem : NetworkBehaviour
 
     GameObject selectedBlock;
 
+    public GameObject block;
+
     public GameObject wall;
+    public GameObject floor;
+    public GameObject ladder;
 
     GameObject cam;
 
@@ -36,7 +40,25 @@ public class BuildSystem : NetworkBehaviour
     void Update()
     {
 
-        if(!IsOwner) return;
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Destroy(selectedBlock);
+            block = wall;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Destroy(selectedBlock);
+            block = floor;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Destroy(selectedBlock);
+            block = ladder;
+        }
+
+        if (!IsOwner) return;
 
         PlayerInput();
 
@@ -112,6 +134,7 @@ public class BuildSystem : NetworkBehaviour
         if (Input.GetButtonDown("Fire1") && blockToDestroy)
         {
             ServerBuildManager.Instance.DestroyServerRpc(blockToDestroy.GetComponent<NetworkObject>().NetworkObjectId);
+            ServerManager.Instance.BuildNavmeshServerRpc();
         }
     }
 
@@ -189,7 +212,7 @@ public class BuildSystem : NetworkBehaviour
     {
         if(!selectedBlock && !isDestroyMode)
         {
-            selectedBlock = Instantiate(wall);
+            selectedBlock = Instantiate(block);
 
             ChangeMaterial(selectedBlock, 0.75f);
             
@@ -206,7 +229,6 @@ public class BuildSystem : NetworkBehaviour
         {
             if(hit.collider)
             {
-
                 // Snap the point to the nearest grid point
                 float x = Mathf.Round(hit.point.x / gridSizeX) * gridSizeX;
                 float y = Mathf.Round(hit.point.y / gridSizeY) * gridSizeY;
@@ -222,10 +244,36 @@ public class BuildSystem : NetworkBehaviour
                 }
                 else
                 {
-                    //snaps block to the top of other one
-                    float targetY = hit.collider.bounds.max.y;
-                    float snappedY = Mathf.Round(targetY / gridSizeY) * gridSizeY;
-                    selectedBlock.transform.position = new Vector3(x, snappedY + blockHeight / 2f, z);                    
+                    if (selectedBlock.GetComponent<Ladder>())
+                    {
+                        // Center on the block being looked at
+                        Vector3 blockCenter = hit.collider.bounds.center;
+
+                        // Push the ladder forward slightly so it sits against the face
+                        Vector3 faceOffset = hit.normal * (selectedBlock.transform.localScale.z / 2f);
+
+                        selectedBlock.transform.position = blockCenter + faceOffset;
+                        selectedBlock.transform.rotation = Quaternion.LookRotation(-hit.normal); // face away from wall
+                    }
+                    else if (selectedBlock.GetComponent<Floor>())
+                    {
+                        // Snap to the top of the block being looked at
+                        float targetY = hit.collider.bounds.max.y;
+                        float snappedY = Mathf.Round(targetY / gridSizeY) * gridSizeY;
+
+                        Vector3 offset = hit.normal * (selectedBlock.transform.localScale.z / 2f);
+
+                        Vector3 snappedPos = new Vector3(x, snappedY + blockHeight / 2f, z) + new Vector3(offset.x, 0, offset.z);
+
+                        selectedBlock.transform.position = snappedPos;
+                    }
+                    else
+                    {
+                        //snaps block to the top of other one
+                        float targetY = hit.collider.bounds.max.y;
+                        float snappedY = Mathf.Round(targetY / gridSizeY) * gridSizeY;
+                        selectedBlock.transform.position = new Vector3(x, snappedY + blockHeight / 2f, z);
+                    }
                 }     
             }
         }
@@ -235,12 +283,13 @@ public class BuildSystem : NetworkBehaviour
             selectedBlock.transform.localEulerAngles += new Vector3(0,90,0);
         }
 
-        if(Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             Vector3 blockPos = selectedBlock.transform.position;
             Quaternion blockRot = selectedBlock.transform.rotation;
             string cleanedName = selectedBlock.name.Replace("(Clone)", "").Trim();
-            ServerBuildManager.Instance.BuildServerRpc(cleanedName, blockPos.x, blockPos.y, blockPos.z,blockRot.x, blockRot.y, blockRot.z, blockRot.w);
+            ServerBuildManager.Instance.BuildServerRpc(cleanedName, blockPos.x, blockPos.y, blockPos.z, blockRot.x, blockRot.y, blockRot.z, blockRot.w);
+            ServerManager.Instance.BuildNavmeshServerRpc();
         }
     }
 

@@ -20,6 +20,7 @@ MonoBehaviour:
   position: {x: -0.134, y: -0.162, z: -0.403}
   adsPosition: {x: 0, y: -0.044, z: -0.055}
   adsTime: 5
+  penetrationLimit: 3
   recoilX: -2
   recoilY: 5
   recoilZ: 0.35

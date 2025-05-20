@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Rendering;
@@ -139,12 +140,33 @@ public class Gun : MonoBehaviour
 
     public virtual void Raycast()
     {
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, 1000,layerMask))
+        RaycastHit[] colliders = Physics.RaycastAll(cam.transform.position, cam.transform.forward, 1000, layerMask);
+
+        int enemiesHit = 0;
+        foreach (var hit in colliders)
         {
-            if(hit.collider.GetComponent<Health>())
+            if (hit.collider.GetComponent<Health>())
             {
+                enemiesHit++;
                 ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
-                ServerManager.Instance.DealDamageServerRpc(id, gunData.damage);
+                ServerManager.Instance.DealDamageServerRpc(id, gunData.damage/enemiesHit);
+                
+            }
+            else if (hit.collider.CompareTag("Head"))
+            {
+                Health health = hit.collider.transform.parent.GetComponent<Health>();
+                if (health)
+                {
+                    enemiesHit++;
+                    ulong id = hit.collider.transform.parent.GetComponent<NetworkObject>().NetworkObjectId;
+                    ServerManager.Instance.DealDamageServerRpc(id, gunData.damage/enemiesHit * 1.5f);
+                    
+                }
+            }
+
+            if (enemiesHit >= gunData.penetrationLimit)
+            {
+                break;    
             }
         }
     }

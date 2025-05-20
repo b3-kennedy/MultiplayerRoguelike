@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
-  public enum PlayerState {NORMAL, SPRINT};
+    public enum PlayerState { NORMAL, SPRINT };
     public PlayerState state;
 
-    
 
-    
+
+
     public float normalSpeed = 5f;
     public float sprintSpeed = 7f;
     public float acceleration = 3f;
@@ -24,7 +24,7 @@ public class PlayerMovement : NetworkBehaviour
     float horizontal;
     float vertical;
 
-    
+
 
     bool normalOnLand = false;
 
@@ -37,6 +37,8 @@ public class PlayerMovement : NetworkBehaviour
     public float landingSlowdownDuration = 1.0f; // Time in seconds to recover full speed
     private float currentSlowdownTime = 0f;
     private bool isRecoveringSpeed = false;
+
+    public bool isOnLadder;
 
     float targetSpeedOnLand;
 
@@ -67,7 +69,7 @@ public class PlayerMovement : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         playerLook = GetComponent<PlayerLook>();
-        if(playerLook.cam)
+        if (playerLook.cam)
         {
             cam = playerLook.cam;
         }
@@ -89,7 +91,7 @@ public class PlayerMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!IsOwner) return;
+        if (!IsOwner) return;
 
         magnitude = rb.linearVelocity.magnitude;
 
@@ -117,7 +119,7 @@ public class PlayerMovement : NetworkBehaviour
                 state = PlayerState.SPRINT;
                 targetSpeed = sprintSpeed;
             }
-            else if(!isMovingForward && IsGrounded())
+            else if (!isMovingForward && IsGrounded())
             {
                 isSprinting = false;
                 state = PlayerState.NORMAL;
@@ -138,7 +140,7 @@ public class PlayerMovement : NetworkBehaviour
             normalOnLand = true;
         }
 
-        if(IsGrounded() && normalOnLand)
+        if (IsGrounded() && normalOnLand)
         {
             isSprinting = false;
             state = PlayerState.NORMAL;
@@ -153,7 +155,7 @@ public class PlayerMovement : NetworkBehaviour
 
 
 
-        if(wasAirborne && grounded)
+        if (wasAirborne && grounded)
         {
             OnLand();
             wasAirborne = false;
@@ -218,9 +220,9 @@ public class PlayerMovement : NetworkBehaviour
 
     public bool isOnSlope()
     {
-        if(Physics.Raycast(groundCheck.position, -transform.up, out RaycastHit hit ,1f))
+        if (Physics.Raycast(groundCheck.position, -transform.up, out RaycastHit hit, 1f))
         {
-            if(hit.normal.y != 1)
+            if (hit.normal.y != 1)
             {
                 return true;
             }
@@ -232,13 +234,24 @@ public class PlayerMovement : NetworkBehaviour
 
     private void FixedUpdate()
     {
+
+        if (isOnLadder)
+        {
+            LadderMovement();
+            return;
+        }
+
         MovePlayer();
+
+
 
     }
 
-    void LateUpdate()
+    void LadderMovement()
     {
-
+        Vector3 vel = rb.linearVelocity;
+        vel.y = vertical * speed;
+        rb.linearVelocity = vel;
     }
 
     void MovePlayer()
@@ -249,19 +262,19 @@ public class PlayerMovement : NetworkBehaviour
         if (IsGrounded())
         {
             rb.AddForce(moveDir.normalized * speed * 10f, ForceMode.Force);
-            
+
         }
         else
         {
             rb.AddForce(moveDir.normalized * speed * 10f * airMultiplier, ForceMode.Force);
         }
-        
+
     }
 
     void SpeedControl()
     {
         Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        if(flatVel.magnitude > speed)
+        if (flatVel.magnitude > speed)
         {
             Vector3 limitedVel = flatVel.normalized * speed;
             rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
@@ -273,5 +286,21 @@ public class PlayerMovement : NetworkBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.GetComponent<Ladder>())
+        {
+            isOnLadder = true;
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        if (other.collider.GetComponent<Ladder>())
+        {
+            isOnLadder = false;
+        }
     }
 }

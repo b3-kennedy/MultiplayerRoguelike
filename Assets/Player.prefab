@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4157433629390844617}
   - component: {fileID: 2179538707015507104}
   - component: {fileID: 7700356781907078408}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 205361162993540698}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CameraHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 8546235777294693309}
   - component: {fileID: 877880891651564526}
   - component: {fileID: 3017848728411565175}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerInterface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 7642832333542201428}
   - component: {fileID: 8124527314207762536}
   - component: {fileID: 2265144934904145744}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GunName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,7 +545,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7964529452921137464}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AmmoUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -584,7 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8610001997543078358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,7 +615,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3919161032470662548}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Orientation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -648,7 +648,7 @@ GameObject:
   - component: {fileID: 5745813851393247299}
   - component: {fileID: 5804331243806709631}
   - component: {fileID: 6849284763405538758}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AmmoCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -784,7 +784,7 @@ GameObject:
   - component: {fileID: 6885173728750628149}
   - component: {fileID: 7526099587313558375}
   - component: {fileID: 2980037825490487622}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MagCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -919,7 +919,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2801566085890934830}
   - component: {fileID: 3138454671718331162}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Recoil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -973,7 +973,7 @@ GameObject:
   - component: {fileID: 6900221025435784323}
   - component: {fileID: 6462596247527463460}
   - component: {fileID: 3644309708731059464}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1050,6 +1050,7 @@ MonoBehaviour:
   airMultiplier: 0.1
   landingSlowdownFactor: 0.5
   landingSlowdownDuration: 1
+  isOnLadder: 0
   sprintMultiplier: 1.5
   targetSpeed: 0
   speed: 0
@@ -1203,7 +1204,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  block: {fileID: 235177268294843029, guid: 9e2d7a03933fb394ea00daeaecee27da, type: 3}
   wall: {fileID: 4930809922531158004, guid: 9fd99de941a31014486a0a9afded084b, type: 3}
+  floor: {fileID: 235177268294843029, guid: 9e2d7a03933fb394ea00daeaecee27da, type: 3}
+  ladder: {fileID: 3766737261275213054, guid: 0ace96a66425bec4db73dd4bcc9cd07e, type: 3}
   gridSizeX: 1
   gridSizeY: 1
   layerMask:
@@ -1239,7 +1243,7 @@ GameObject:
   - component: {fileID: 8398740556329344853}
   - component: {fileID: 8281775326036896813}
   - component: {fileID: 6090488035779228817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1301,7 +1305,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 247
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1420,7 +1424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1541742267214588537}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1436,7 +1440,7 @@ Transform:
   m_GameObject: {fileID: 8097411194063444912}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1453,7 +1457,7 @@ GameObject:
   - component: {fileID: 1785035893515359110}
   - component: {fileID: 172378362037794474}
   - component: {fileID: 5263812574069537057}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: /
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1591,7 +1595,7 @@ GameObject:
   - component: {fileID: 4889925369644008069}
   - component: {fileID: 8650069368900265990}
   - component: {fileID: 4359533251091688856}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GunPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
