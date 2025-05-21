@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -33,6 +35,7 @@ public class Gun : MonoBehaviour
 
     float reloadTimer;
 
+    RaycastHit[] hitBuffer = new RaycastHit[10];
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -138,34 +141,36 @@ public class Gun : MonoBehaviour
 
     public virtual void Raycast()
     {
-        RaycastHit[] colliders = Physics.RaycastAll(cam.transform.position, cam.transform.forward, 1000, layerMask);
+        int hitCount = Physics.RaycastNonAlloc(cam.transform.position, cam.transform.forward, hitBuffer, 1000, layerMask);
+
+        // Sort only the relevant hits
+        Array.Sort(hitBuffer, 0, hitCount, Comparer<RaycastHit>.Create((a, b) => a.distance.CompareTo(b.distance)));
 
         int enemiesHit = 0;
-        foreach (var hit in colliders)
+        for (int i = 0; i < hitCount; i++)
         {
-            if (hit.collider.GetComponent<Health>())
-            {
-                enemiesHit++;
-                ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
-                ServerManager.Instance.DealDamageServerRpc(id, gunData.damage/enemiesHit);
-                
-            }
-            else if (hit.collider.CompareTag("Head"))
+            var hit = hitBuffer[i];
+            if (hit.collider == null) continue;
+
+            if (hit.collider.CompareTag("Head"))
             {
                 Health health = hit.collider.transform.parent.GetComponent<Health>();
                 if (health)
                 {
                     enemiesHit++;
                     ulong id = hit.collider.transform.parent.GetComponent<NetworkObject>().NetworkObjectId;
-                    ServerManager.Instance.DealDamageServerRpc(id, gunData.damage/enemiesHit * 1.5f);
-                    
+                    ServerManager.Instance.DealDamageServerRpc(id, gunData.damage / enemiesHit * 1.5f);
                 }
+            }
+            else if (hit.collider.GetComponent<Health>())
+            {
+                enemiesHit++;
+                ulong id = hit.collider.GetComponent<NetworkObject>().NetworkObjectId;
+                ServerManager.Instance.DealDamageServerRpc(id, gunData.damage / enemiesHit);
             }
 
             if (enemiesHit >= gunData.penetrationLimit)
-            {
-                break;    
-            }
+                break;
         }
     }
 
