@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3955343042188855269}
   - component: {fileID: -1441732285502919121}
   - component: {fileID: 8087391175317524625}
+  - component: {fileID: 1389293854511993006}
   m_Layer: 0
   m_Name: BlueOrganicMatter
   m_TagString: Untagged
@@ -209,3 +210,16 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1389293854511993006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213711097900998049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d544a0a32620b048ae61be0f03ca8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpSpeed: 5

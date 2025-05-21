@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -1470992266482423763}
   - component: {fileID: -4345565550689793677}
   - component: {fileID: 4611804805318733752}
+  - component: {fileID: 8713109637013244227}
   m_Layer: 0
   m_Name: GreenOrganicMatter
   m_TagString: Untagged
@@ -209,3 +210,18 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8713109637013244227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213711097900998049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d544a0a32620b048ae61be0f03ca8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canBeCollected: 1
+  target: {fileID: 0}
+  lerpSpeed: 5
