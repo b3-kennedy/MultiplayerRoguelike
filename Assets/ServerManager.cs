@@ -41,7 +41,7 @@ public class ServerManager : NetworkBehaviour
         if (spawnEnemies)
         {
             SpawnEnemies();
-         }
+        }
 
 
     }

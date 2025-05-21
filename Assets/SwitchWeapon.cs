@@ -19,6 +19,7 @@ public class SwitchWeapon : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1) && gunPos.childCount > 1 && !isSwapping)
         {
             StartCoroutine(SwapGuns());
+
         }
     }
 
@@ -49,5 +50,13 @@ public class SwitchWeapon : MonoBehaviour
         gunPos.GetComponent<GunBob>().UpdateGun();
 
         isSwapping = false;
+
+        PlayerInterfaceManager playerInterfaceManager = GetComponent<PlayerInterfaceManager>();
+        Gun gun = gun2.GetChild(0).GetComponent<Gun>();
+        string gunName = gun.gunData.gunName;
+        playerInterfaceManager.UpdateNameText(gunName);
+        playerInterfaceManager.UpdateMagText(gun.GetMagCount());
+        playerInterfaceManager.UpdateAmmoText(gun.GetAmmoCount());
+
     }
 }

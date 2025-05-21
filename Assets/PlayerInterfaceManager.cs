@@ -33,6 +33,11 @@ public class PlayerInterfaceManager : NetworkBehaviour
 
     }
 
+    public void UpdateNameText(string name)
+    {
+        gunNameText.text = name;
+    }
+
     public void UpdateAmmoText(int ammo)
     {
         ammoText.text = ammo.ToString();
