@@ -93,9 +93,7 @@ public class Gun : MonoBehaviour
 
         Aiming();
         Shoot();
-        Reload();
-
-        
+        Reload();        
     }
 
     public void Recoil()

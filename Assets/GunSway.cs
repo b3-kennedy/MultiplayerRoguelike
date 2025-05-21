@@ -39,9 +39,16 @@ public class GunSway : MonoBehaviour
         if(transform.childCount > 0)
         {
             gun = transform.GetChild(0);
-            gunStartPos = gun.localPosition;
             gunScript = gun.GetChild(0).GetComponent<Gun>();
+            gunStartPos = gunScript.gunData.position;
         }
+    }
+
+    public void UpdateGun()
+    {
+        gun = transform.GetChild(0);
+        gunScript = gun.GetChild(0).GetComponent<Gun>();
+        gunStartPos = gunScript.gunData.position;
     }
 
     // Update is called once per frame

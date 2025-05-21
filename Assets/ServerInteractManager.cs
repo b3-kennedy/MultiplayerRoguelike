@@ -55,8 +55,17 @@ public class ServerInteractManager : NetworkBehaviour
             NetworkObject clientPlayer = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
             Transform gunPos = clientPlayer.transform.Find("CameraHolder/Recoil/Camera/GunPosition");
             GameObject spawnedGun = Instantiate(gun, gunPos);
+
+            if (gunPos.childCount > 1)
+            {
+                spawnedGun.transform.SetAsFirstSibling();
+                gunPos.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+            }
+            
+
             gunPos.GetComponent<GunSway>().InitializeGun();
             gunPos.GetComponent<GunBob>().InitializeGun();
+            spawnedGun.GetComponent<Animator>().SetTrigger("pickedup");
             clientPlayer.GetComponent<PlayerInterfaceManager>().OnGunPickup(spawnedGun);
             
         }

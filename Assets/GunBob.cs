@@ -43,6 +43,13 @@ public class GunBob : MonoBehaviour
         }
     }
 
+    //called on weapon switch
+    public void UpdateGun()
+    {
+        gunData = transform.GetChild(0).GetChild(0).GetComponent<Gun>().gunData;
+        gun = transform.GetChild(0).GetChild(0).GetComponent<Gun>();
+    }
+
     // Update is called once per frame
     void Update()
     {

@@ -973,6 +973,7 @@ GameObject:
   - component: {fileID: 6900221025435784323}
   - component: {fileID: 6462596247527463460}
   - component: {fileID: 3644309708731059464}
+  - component: {fileID: 7168772530147038626}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -1230,6 +1231,18 @@ MonoBehaviour:
   gunNameText: {fileID: 2265144934904145744}
   ammoText: {fileID: 6849284763405538758}
   magText: {fileID: 2980037825490487622}
+--- !u!114 &7168772530147038626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7397207673657100299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b726e07405d5864d91443d67313ed45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7607185232871171783
 GameObject:
   m_ObjectHideFlags: 0
