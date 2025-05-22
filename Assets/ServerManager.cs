@@ -44,6 +44,15 @@ public class ServerManager : NetworkBehaviour
         }
 
 
+        if (Input.GetKeyDown(KeyCode.P) && !spawnEnemies)
+        {
+            spawnEnemies = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.P) && spawnEnemies)
+        {
+            spawnEnemies = false;
+        }
+
     }
 
     void SpawnEnemies()
@@ -73,7 +82,7 @@ public class ServerManager : NetworkBehaviour
     [ServerRpc]
     public void SpawnEnemyServerRpc()
     {
-        GameObject enemy = Instantiate(enemyPrefab);
+        GameObject enemy = Instantiate(enemyPrefab, new Vector3(10,0,10), Quaternion.identity);
         enemy.GetComponent<NetworkObject>().Spawn();
     }
 

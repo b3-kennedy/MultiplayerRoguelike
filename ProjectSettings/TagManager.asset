@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BuildingBlock
   - Head
+  - Collection
   layers:
   - Default
   - TransparentFX

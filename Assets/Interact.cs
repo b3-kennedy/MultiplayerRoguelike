@@ -1,10 +1,12 @@
+using System.Linq;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class Interact : MonoBehaviour
+public class Interact : NetworkBehaviour
 {
     [SerializeField] float interactRange = 5f;
     GameObject cam;
@@ -17,21 +19,33 @@ public class Interact : MonoBehaviour
 
     public float collectRange = 5f;
 
+    ulong netId;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        
+    }
+
+    public override void OnNetworkSpawn()
+    {
         cam = GetComponent<PlayerData>().GetCameraGameObject();
         playerInterfaceManager = GetComponent<PlayerInterfaceManager>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
+
+
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, interactRange, layerMask))
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                InteractWithObject(hit.collider.gameObject.layer, hit.collider.gameObject);
+                InteractWithObject(hit.collider.gameObject.layer, hit.collider.gameObject, hit.collider.tag);
             }
 
         }
@@ -41,15 +55,15 @@ public class Interact : MonoBehaviour
         for (int i = 0; i < lootCount; i++)
         {
             var col = lootColliders[i];
-            string lootName = col.gameObject.name.Replace("(Clone)", "").Trim();
+            string lootName = StringManager.RemoveCloneString(col.gameObject.name);
 
             if (ServerLootSpawner.Instance.lootDict.TryGetValue(lootName, out var lootObj))
             {
+                netId = GetComponent<NetworkObject>().NetworkObjectId;
                 LootCollectMove lootObject = lootColliders[i].gameObject.GetComponent<LootCollectMove>();
-                lootObject.SetTarget(transform);
-                lootObject.SetCanBeCollected(true);
-                lootObject.gameObject.GetComponent<Rigidbody>().isKinematic = true;
-                lootColliders[i].isTrigger = true;
+                lootObject.SetTargetServerRpc(netId);
+                lootObject.SetCanBeCollectedServerRpc(true, NetworkManager.Singleton.LocalClientId);
+
 
 
             }
@@ -58,20 +72,43 @@ public class Interact : MonoBehaviour
         
     }
 
-    void InteractWithObject(int layer, GameObject obj)
+    void InteractWithObject(int layer, GameObject obj, string tag)
     {
-            switch(layer)
-            {
-                case 6:
-                    Debug.Log("Interacted with gun");
-                    InteractWithGun(obj.name);
-                    Destroy(obj);
-                    break;
-                default:
-                    Debug.Log(obj.name);
-                    break;
+        switch (layer)
+        {
+            case 6:
+                Debug.Log("Interacted with gun");
+                InteractWithGun(obj.name);
+                Destroy(obj);
+                break;
+            default:
+                Debug.Log(obj.name);
+                break;
 
-            }
+        }
+
+        switch (tag)
+        {
+            case "Collection":
+                InteractWithCollectionBox(obj);
+                break;    
+        }
+    }
+
+    void InteractWithCollectionBox(GameObject obj)
+    {
+        CollectionBox box = obj.GetComponent<CollectionBox>();
+        LootHolder holder = GetComponent<LootHolder>();
+
+        foreach (var item in holder.inventory.ToList())
+        {
+            string itemName = item.Key;
+            int amount = item.Value;
+
+            box.AddItemServerRpc(itemName, amount);
+            holder.inventory[itemName] = 0;
+        }
+
     }
 
     void InteractWithGun(string gunName)

@@ -287,7 +287,7 @@ public class BuildSystem : NetworkBehaviour
         {
             Vector3 blockPos = selectedBlock.transform.position;
             Quaternion blockRot = selectedBlock.transform.rotation;
-            string cleanedName = selectedBlock.name.Replace("(Clone)", "").Trim();
+            string cleanedName = StringManager.RemoveCloneString(selectedBlock.name);
             ServerBuildManager.Instance.BuildServerRpc(cleanedName, blockPos.x, blockPos.y, blockPos.z, blockRot.x, blockRot.y, blockRot.z, blockRot.w);
             ServerManager.Instance.BuildNavmeshServerRpc();
         }

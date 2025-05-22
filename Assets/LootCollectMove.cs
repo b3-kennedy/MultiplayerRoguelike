@@ -8,9 +8,15 @@ public class LootCollectMove : NetworkBehaviour
 
     public float lerpSpeed = 5f;
 
-    public void SetCanBeCollected(bool value)
+    ulong clientId;
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetCanBeCollectedServerRpc(bool value, ulong cId)
     {
         canBeCollected = value;
+        gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().isTrigger = true;
+        clientId = cId;
     }
 
     public bool GetCanBeCollectedValue()
@@ -18,9 +24,14 @@ public class LootCollectMove : NetworkBehaviour
         return canBeCollected;
     }
 
-    public void SetTarget(Transform t)
+    [ServerRpc(RequireOwnership = false)]
+    public void SetTargetServerRpc(ulong networkId)
     {
-        target = t;
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkId, out var t))
+        {
+            target = t.transform;
+        }
+        
     }
 
     public Transform GetTarget()
@@ -32,7 +43,7 @@ public class LootCollectMove : NetworkBehaviour
     void Update()
     {
 
-
+        if (!IsServer) return;
 
         if (canBeCollected && target)
         {
@@ -41,7 +52,18 @@ public class LootCollectMove : NetworkBehaviour
 
         if (target && Vector3.Distance(transform.position, target.position) <= 1f)
         {
-            Destroy(gameObject);
+            LootHolder holder = target.gameObject.GetComponent<LootHolder>();
+            if (holder)
+            {
+                holder.AddItemServerRpc(StringManager.RemoveCloneString(gameObject.name), clientId);
+            }
+            DestroyDropServerRpc();
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void DestroyDropServerRpc()
+    {
+        Destroy(gameObject);
     }
 }
