@@ -20,17 +20,24 @@ public class PlayerInterfaceManager : NetworkBehaviour
 
     [Header("Collection Box Interface")]
     public GameObject collectionUI;
-    Button convertButton;
-    Button craftButton;
+    [SerializeField] Button convertButton;
+    [SerializeField] Button craftButton;
 
-    GameObject convertPanel;
-    GameObject craftPanel;
+    [SerializeField] GameObject convertPanel;
+    [SerializeField] GameObject craftPanel;
+
+    [SerializeField] GameObject buildingMaterialsPanel;
+
+    [SerializeField] GameObject weaponMaterialsPanel;
+
+    [SerializeField] Button buildingMaterialsButton;
+    [SerializeField] Button weaponMaterialsButton;
 
     GameObject collectionBox;
 
-    TextMeshProUGUI greenResourceText;
-    TextMeshProUGUI redResourceText;
-    TextMeshProUGUI blueResourceText;
+    [SerializeField] TextMeshProUGUI greenResourceText;
+    [SerializeField] TextMeshProUGUI redResourceText;
+    [SerializeField] TextMeshProUGUI blueResourceText;
 
     void Start()
     {
@@ -38,18 +45,14 @@ public class PlayerInterfaceManager : NetworkBehaviour
         ammoUI.SetActive(false);
         collectionUI.SetActive(false);
 
-        convertButton = collectionUI.transform.Find("ConvertButton").GetComponent<Button>();
-        craftButton = collectionUI.transform.Find("CraftButton").GetComponent<Button>();
-
-        convertPanel = collectionUI.transform.Find("ConvertPanel").gameObject;
-        craftPanel = collectionUI.transform.Find("CraftPanel").gameObject;
-
         convertButton.onClick.AddListener(delegate { SetUIVisible("ConvertPanel"); });
         craftButton.onClick.AddListener(delegate { SetUIVisible("CraftPanel"); });
 
-        greenResourceText = collectionUI.transform.Find("ConvertPanel/ResourceTextParent/Green").GetComponent<TextMeshProUGUI>();
-        redResourceText = collectionUI.transform.Find("ConvertPanel/ResourceTextParent/Red").GetComponent<TextMeshProUGUI>();
-        blueResourceText = collectionUI.transform.Find("ConvertPanel/ResourceTextParent/Blue").GetComponent<TextMeshProUGUI>();
+        weaponMaterialsPanel.SetActive(false);
+        buildingMaterialsPanel.SetActive(true);
+
+        weaponMaterialsButton.onClick.AddListener(delegate { SetUIVisible("WeaponMaterialsPanel"); });
+        buildingMaterialsButton.onClick.AddListener(delegate { SetUIVisible("BuildingMaterialsPanel"); });
     }
 
     public void OnGunPickup(GameObject gun)
@@ -90,9 +93,9 @@ public class PlayerInterfaceManager : NetworkBehaviour
                     CollectionBox box = collectionBox.GetComponent<CollectionBox>();
                     Dictionary<string, int> inventory = box.GetInventory();
 
-                    int greenCount = 0, blueCount = 0, redCount = 0;
 
-                    if (inventory.TryGetValue("GreenOrganicMatter", out greenCount))
+
+                    if (inventory.TryGetValue("Green", out var greenCount))
                     {
                         greenResourceText.text = "Green: " + greenCount;
                     }
@@ -101,7 +104,7 @@ public class PlayerInterfaceManager : NetworkBehaviour
                         greenResourceText.text = "Green: 0";
                     }
 
-                    if (inventory.TryGetValue("BlueOrganicMatter", out blueCount))
+                    if (inventory.TryGetValue("Blue", out var blueCount))
                     {
                         blueResourceText.text = "Blue: " + blueCount;
                     }
@@ -110,7 +113,7 @@ public class PlayerInterfaceManager : NetworkBehaviour
                         blueResourceText.text = "Blue: 0";
                     }
 
-                    if (inventory.TryGetValue("RedOrganicMatter", out redCount))
+                    if (inventory.TryGetValue("Red", out var redCount))
                     {
                         redResourceText.text = "Red: " + redCount;
                     }
@@ -147,6 +150,14 @@ public class PlayerInterfaceManager : NetworkBehaviour
             case "CraftPanel":
                 convertPanel.SetActive(false);
                 craftPanel.SetActive(true);
+                break;
+            case "BuildingMaterialsPanel":
+                weaponMaterialsPanel.SetActive(false);
+                buildingMaterialsPanel.SetActive(true);
+                break;
+            case "WeaponMaterialsPanel":
+                buildingMaterialsPanel.SetActive(false);
+                weaponMaterialsPanel.SetActive(true);
                 break;
             default:
                 Debug.Log($"UI element {name} not found, perhaps a typo in the case statement?");

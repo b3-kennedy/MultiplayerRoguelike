@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5168370796361064606}
   - component: {fileID: -1688809678871191863}
   m_Layer: 0
-  m_Name: RedOrganicMatter
+  m_Name: Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

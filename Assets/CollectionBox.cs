@@ -41,7 +41,7 @@ public class CollectionBox : NetworkBehaviour
     [ClientRpc]
     void UpdateInventoryClientRpc(string itemName, int amount)
     {
-        if (IsServer) return;
+        //if (IsServer) return;
 
         inventory[itemName] = amount;
 

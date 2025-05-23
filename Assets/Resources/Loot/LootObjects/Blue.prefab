@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 6134183820353151807}
   - component: {fileID: 1979578396032167208}
   - component: {fileID: 5622661197491955381}
-  - component: {fileID: -1470992266482423763}
-  - component: {fileID: -4345565550689793677}
-  - component: {fileID: 4611804805318733752}
-  - component: {fileID: 8713109637013244227}
+  - component: {fileID: 3955343042188855269}
+  - component: {fileID: -1441732285502919121}
+  - component: {fileID: 8087391175317524625}
+  - component: {fileID: 1389293854511993006}
   m_Layer: 0
-  m_Name: GreenOrganicMatter
+  m_Name: Blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5a380e2211499c24bbf1e9c3c48af0b0, type: 2}
+  - {fileID: 2100000, guid: a5909b292bfe27e4db10e24ea81cdb8a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,7 +112,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &-1470992266482423763
+--- !u!54 &3955343042188855269
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,7 +139,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-4345565550689793677
+--- !u!114 &-1441732285502919121
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2099240549
+  GlobalObjectIdHash: 3104667580
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -164,7 +164,7 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &4611804805318733752
+--- !u!114 &8087391175317524625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -210,7 +210,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &8713109637013244227
+--- !u!114 &1389293854511993006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,6 +222,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d544a0a32620b048ae61be0f03ca8f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canBeCollected: 1
-  target: {fileID: 0}
   lerpSpeed: 5
