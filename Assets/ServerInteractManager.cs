@@ -54,6 +54,7 @@ public class ServerInteractManager : NetworkBehaviour
             Debug.Log(gunName);
             NetworkObject clientPlayer = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
             Transform gunPos = clientPlayer.transform.Find("CameraHolder/Recoil/Camera/GunPosition");
+            Recoil recoil = clientPlayer.transform.Find("CameraHolder/Recoil").GetComponent<Recoil>();
             GameObject spawnedGun = Instantiate(gun, gunPos);
 
             if (gunPos.childCount > 1)
@@ -61,8 +62,9 @@ public class ServerInteractManager : NetworkBehaviour
                 spawnedGun.transform.SetAsFirstSibling();
                 gunPos.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
             }
-            
 
+            Gun gunScript = spawnedGun.transform.GetChild(0).GetComponent<Gun>();
+            recoil.SetData(gunScript.gunData.recoilX, gunScript.gunData.recoilY, gunScript.gunData.recoilZ, gunScript.gunData.snap, gunScript.gunData.returnSpeed);
             gunPos.GetComponent<GunSway>().InitializeGun();
             gunPos.GetComponent<GunBob>().InitializeGun();
             spawnedGun.GetComponent<Animator>().SetTrigger("pickedup");

@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Interact : NetworkBehaviour
 {
@@ -47,6 +48,10 @@ public class Interact : NetworkBehaviour
             {
                 InteractWithObject(hit.collider.gameObject.layer, hit.collider.gameObject, hit.collider.tag);
             }
+            else if (Input.GetKeyDown(KeyCode.F))
+            {
+                AlternateInteract(hit.collider.tag, hit.collider.gameObject);
+            }
 
         }
 
@@ -72,6 +77,16 @@ public class Interact : NetworkBehaviour
         
     }
 
+    void AlternateInteract(string tag, GameObject obj)
+    {
+        switch (tag)
+        {
+            case "Collection":
+                DepositInCollectionBox(obj);
+                break;
+        }
+    }
+
     void InteractWithObject(int layer, GameObject obj, string tag)
     {
         switch (layer)
@@ -91,11 +106,31 @@ public class Interact : NetworkBehaviour
         {
             case "Collection":
                 InteractWithCollectionBox(obj);
-                break;    
+                break;
         }
+
+
     }
 
     void InteractWithCollectionBox(GameObject obj)
+    {
+
+
+        CollectionBox box = obj.GetComponent<CollectionBox>();
+        if (!box.isOccupied.Value)
+        {
+            playerInterfaceManager.SetUIVisible("CollectionBoxUI", true, obj);
+            box.InteractedWithServerRpc(true);
+        }
+        else
+        {
+            Debug.Log("Box in use");
+        }
+
+
+    }
+
+    void DepositInCollectionBox(GameObject obj)
     {
         CollectionBox box = obj.GetComponent<CollectionBox>();
         LootHolder holder = GetComponent<LootHolder>();
@@ -108,7 +143,6 @@ public class Interact : NetworkBehaviour
             box.AddItemServerRpc(itemName, amount);
             holder.inventory[itemName] = 0;
         }
-
     }
 
     void InteractWithGun(string gunName)

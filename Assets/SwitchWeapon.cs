@@ -6,11 +6,13 @@ public class SwitchWeapon : MonoBehaviour
 
     Transform gunPos;
     bool isSwapping = false;
+    Recoil recoil;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         gunPos = GetComponent<PlayerData>().GetGunParent();
+        recoil = transform.Find("CameraHolder/Recoil").GetComponent<Recoil>();
     }
 
     // Update is called once per frame
@@ -53,6 +55,8 @@ public class SwitchWeapon : MonoBehaviour
 
         PlayerInterfaceManager playerInterfaceManager = GetComponent<PlayerInterfaceManager>();
         Gun gun = gun2.GetChild(0).GetComponent<Gun>();
+        
+        recoil.SetData(gun.gunData.recoilX, gun.gunData.recoilY, gun.gunData.recoilZ, gun.gunData.snap, gun.gunData.returnSpeed);
         string gunName = gun.gunData.gunName;
         playerInterfaceManager.UpdateNameText(gunName);
         playerInterfaceManager.UpdateMagText(gun.GetMagCount());
