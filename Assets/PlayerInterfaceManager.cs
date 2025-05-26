@@ -97,7 +97,6 @@ public class PlayerInterfaceManager : NetworkBehaviour
         }
         UpdateItemCount();
         
-        
     }
 
     public void UpdateItemCount()
@@ -174,10 +173,12 @@ public class PlayerInterfaceManager : NetworkBehaviour
             case "ConvertPanel":
                 craftPanel.SetActive(false);
                 convertPanel.SetActive(true);
+                GetComponent<Crafting>().ShowRecipes();
                 break;
             case "CraftPanel":
                 convertPanel.SetActive(false);
                 craftPanel.SetActive(true);
+                GetComponent<Crafting>().ShowRecipes();
                 break;
             case "BuildingMaterialsPanel":
                 weaponMaterialsPanel.SetActive(false);

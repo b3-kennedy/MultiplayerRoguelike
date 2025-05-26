@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Crafting : MonoBehaviour
@@ -9,11 +10,17 @@ public class Crafting : MonoBehaviour
 
     [SerializeField] Transform weaponsMaterialParent;
 
+    [SerializeField] Transform craftingMaterialParent;
+
     [SerializeField] GameObject itemCraftingUIElement;
+
+    CollectionBox collectionBox;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        collectionBox = FindFirstObjectByType<CollectionBox>();
+
         playerInterfaceManager = GetComponent<PlayerInterfaceManager>();
 
         Recipe[] recipes = Resources.LoadAll<Recipe>("Recipes/Convert/Weapons");
@@ -37,7 +44,29 @@ public class Crafting : MonoBehaviour
     {
         foreach (var required in requiredItems)
         {
-            string itemName = required.item.name;
+            string itemName;
+            if (!string.IsNullOrEmpty(required.itemName))
+            {
+                itemName = required.itemName;
+            }
+            else
+            {
+                if (required.item != null)
+                {
+                    itemName = required.item.name;
+                }
+                else
+                {
+                    itemName = null;
+                }
+            }
+
+            if (string.IsNullOrEmpty(itemName))
+            {
+                Debug.LogWarning("RecipeItemAndCount has neither itemName nor item GameObject set!");
+                return false;
+            }
+
             if (!inventory.ContainsKey(itemName) || inventory[itemName] < required.count)
             {
                 return false;
@@ -48,51 +77,66 @@ public class Crafting : MonoBehaviour
 
     public void ShowRecipes()
     {
-        var collectionBox = FindFirstObjectByType<CollectionBox>();
+        
         Dictionary<string, int> inventory = collectionBox.GetInventory();
 
-        if (weaponsMaterialParent.childCount > 0)
-        { 
-            for (int i = 0; i < weaponsMaterialParent.childCount; i++)
-            {
-                Destroy(weaponsMaterialParent.GetChild(i).gameObject);
-            }
-        }
+        // Clear UI elements
+        foreach (Transform child in weaponsMaterialParent)
+            Destroy(child.gameObject);
+
+        foreach (Transform child in craftingMaterialParent)
+            Destroy(child.gameObject);
 
         foreach (var item in weaponsMaterialsRecipes)
         {
             var recipe = item.Key;
             var recipeItemsLists = item.Value;
 
-            // Find the first craftable recipe group
-            RecipeItemGroup selectedGroup = recipeItemsLists
-                .Find(group => CanCraft(group.items, inventory));
-
-            // Skip this recipe if it's not craftable
+            RecipeItemGroup selectedGroup = recipeItemsLists.Find(group => CanCraft(group.items, inventory));
             if (selectedGroup == null)
                 continue;
 
-            // Only now, spawn the UI
-            GameObject recipeUI = Instantiate(itemCraftingUIElement, weaponsMaterialParent);
-            CraftableItemUI itemUI = recipeUI.GetComponent<CraftableItemUI>();
-
-            itemUI.itemCount = selectedGroup.quantityMade;
-            itemUI.nameText.text = recipe.recipeName + " x" + itemUI.itemCount.ToString();
-
-            GameObject itemTextPrefab = itemUI.itemText;
-
-            foreach (var recipeItem in selectedGroup.items)
+            if (recipe.type == Recipe.RecipeType.CONVERT)
             {
-                GameObject spawnedItemText = Instantiate(itemTextPrefab, itemUI.recipeItemParent);
-                spawnedItemText.GetComponent<TextMeshProUGUI>().text =
-                    recipeItem.item.name + ": " + recipeItem.count;
+                CreateRecipeUI(recipe, selectedGroup, weaponsMaterialParent, recipe.type);
+            }
+            else if (recipe.type == Recipe.RecipeType.CRAFTING)
+            {
+                CreateRecipeUI(recipe, selectedGroup, craftingMaterialParent, recipe.type);
+            }
+        }
+    }
+
+    private void CreateRecipeUI(Recipe recipe, RecipeItemGroup selectedGroup, Transform parent, Recipe.RecipeType recipeType)
+    {
+
+        GameObject recipeUI = Instantiate(itemCraftingUIElement, parent);
+        CraftableItemUI itemUI = recipeUI.GetComponent<CraftableItemUI>();
+
+        itemUI.itemCount = selectedGroup.quantityMade;
+        itemUI.nameText.text = recipe.recipeName + " x" + itemUI.itemCount.ToString();
+
+        GameObject itemTextPrefab = itemUI.itemText;
+
+        foreach (var recipeItem in selectedGroup.items)
+        {
+            GameObject spawnedItemText = Instantiate(itemTextPrefab, itemUI.recipeItemParent);
+            if (recipeItem.item)
+            {
+                spawnedItemText.GetComponent<TextMeshProUGUI>().text = recipeItem.item.name + ": " + recipeItem.count;
+            }
+            else
+            {
+                spawnedItemText.GetComponent<TextMeshProUGUI>().text = recipeItem.itemName + ": " + recipeItem.count;
             }
 
-            itemUI.craftButton.onClick.AddListener(delegate
-            {
-                CraftItem(selectedGroup.items, itemUI.itemCount, itemUI.nameText.text);
-            });
         }
+
+        itemUI.craftButton.onClick.AddListener(delegate
+        {
+            CraftItem(selectedGroup.items, itemUI.itemCount, recipe.recipeName, recipeType);
+        });
+
     }
 
     public void SortRecipes(GameObject collectionBox)
@@ -100,9 +144,29 @@ public class Crafting : MonoBehaviour
 
     }
 
-    void CraftItem(List<RecipeItemAndCount> itemAndCount, int quantity, string itemName)
+    void CraftItem(List<RecipeItemAndCount> itemAndCount, int quantity, string itemName, Recipe.RecipeType recipeType)
     {
-        GetComponent<PlayerInterfaceManager>().AddCraftedItemToCollectionBox(itemAndCount, quantity, itemName);
+        if (recipeType == Recipe.RecipeType.CONVERT)
+        {
+            GetComponent<PlayerInterfaceManager>().AddCraftedItemToCollectionBox(itemAndCount, quantity, itemName);
+        }
+        else
+        {
+            // Add the crafted item to the player's inventory
+            GetComponent<LootHolder>().AddItemServerRpc(itemName, NetworkManager.Singleton.LocalClientId, quantity);
+
+            // Remove required items from the collection box
+            var collectionBox = FindFirstObjectByType<CollectionBox>();
+            foreach (var item in itemAndCount)
+            {
+                string name = !string.IsNullOrEmpty(item.itemName) ? item.itemName : (item.item != null ? item.item.name : null);
+                if (!string.IsNullOrEmpty(name))
+                {
+                    collectionBox.RemoveItemServerRpc(name, item.count);
+                }
+            }
+        }
+        
         ShowRecipes();
     }
 

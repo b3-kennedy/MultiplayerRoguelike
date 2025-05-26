@@ -32,6 +32,22 @@ public class CollectionBox : NetworkBehaviour
         }
     }
 
+    public void DebugInventory()
+    {
+        if (inventory.Count == 0)
+        {
+            Debug.Log("Inventory is empty.");
+        }
+        else
+        {
+            Debug.Log("Inventory contents:");
+            foreach (KeyValuePair<string, int> entry in inventory)
+            {
+                Debug.Log($" - {entry.Key}: {entry.Value}");
+            }
+        }
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void InteractedWithServerRpc(bool value)

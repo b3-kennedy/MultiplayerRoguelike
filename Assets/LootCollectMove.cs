@@ -55,7 +55,7 @@ public class LootCollectMove : NetworkBehaviour
             LootHolder holder = target.gameObject.GetComponent<LootHolder>();
             if (holder)
             {
-                holder.AddItemServerRpc(StringManager.RemoveCloneString(gameObject.name), clientId);
+                holder.AddItemServerRpc(StringManager.RemoveCloneString(gameObject.name), clientId, 1);
             }
             DestroyDropServerRpc();
         }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class RecipeItemAndCount
 {
     public GameObject item;
+    public string itemName;
     public int count;
 }
 
@@ -19,7 +20,9 @@ public class RecipeItemGroup
 [CreateAssetMenu(fileName = "Recipe", menuName = "Scriptable Objects/Recipe")]
 public class Recipe : ScriptableObject
 {
+    public enum RecipeType {CONVERT, CRAFTING};
+    public RecipeType type;
     public string recipeName;
     public List<RecipeItemGroup> recipeItems;
-    
+
 }
