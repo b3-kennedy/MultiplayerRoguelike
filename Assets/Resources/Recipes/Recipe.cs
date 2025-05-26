@@ -12,7 +12,7 @@ public class RecipeItemAndCount
 public class RecipeItemGroup
 {
     public List<RecipeItemAndCount> items;
-    public float quantityMade;
+    public int quantityMade;
 }
 
 

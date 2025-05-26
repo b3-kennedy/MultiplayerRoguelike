@@ -35,6 +35,8 @@ public class Gun : MonoBehaviour
 
     float reloadTimer;
 
+    bool canShoot = true;
+
     RaycastHit[] hitBuffer = new RaycastHit[10];
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -66,6 +68,16 @@ public class Gun : MonoBehaviour
             transform.parent.GetComponent<Collider>().enabled = true;
         }
         
+    }
+
+    public void SetCanShoot(bool value)
+    {
+        canShoot = value;
+    }
+
+    public bool CanShoot()
+    {
+        return canShoot;
     }
 
     public void SetPlayerInterface(PlayerInterfaceManager manager)

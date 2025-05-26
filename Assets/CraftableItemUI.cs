@@ -11,4 +11,8 @@ public class CraftableItemUI : MonoBehaviour
     public Transform recipeItemParent;
 
     public GameObject itemText;
+
+    public Button craftButton;
+
+    public int itemCount;
 }

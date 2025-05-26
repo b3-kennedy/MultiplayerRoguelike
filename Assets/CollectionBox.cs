@@ -15,15 +15,21 @@ public class CollectionBox : NetworkBehaviour
     {
         if (inventory.ContainsKey(itemName))
         {
-            inventory[itemName] += amount;
             UpdateInventoryClientRpc(itemName, inventory[itemName] + amount);
         }
         else
         {
-            inventory[itemName] = amount;
             UpdateInventoryClientRpc(itemName, amount);
         }
-        Debug.Log($"Deposited: {itemName}. Total: {inventory[itemName]}");
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RemoveItemServerRpc(string itemName, int amount)
+    {
+        if (inventory.ContainsKey(itemName))
+        {
+            UpdateInventoryClientRpc(itemName, inventory[itemName] - amount);
+        }
     }
 
 
@@ -43,7 +49,13 @@ public class CollectionBox : NetworkBehaviour
     {
         //if (IsServer) return;
 
+ 
         inventory[itemName] = amount;
+
+        if (inventory[itemName] < 0)
+        {
+            inventory[itemName] = 0;
+        }
 
         Debug.Log($"Deposited: {itemName}. Total: {inventory[itemName]}");
     }

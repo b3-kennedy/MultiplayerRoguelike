@@ -4,7 +4,10 @@ public class AutomaticGun : Gun
 {
     public override void Shoot()
     {
-        if(shootTimer < gunData.fireRate)
+
+        if (!CanShoot()) return;
+
+        if (shootTimer < gunData.fireRate)
         {
             shootTimer += Time.deltaTime;
         }

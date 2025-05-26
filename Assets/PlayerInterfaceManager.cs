@@ -76,53 +76,80 @@ public class PlayerInterfaceManager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) && currentActiveUI)
         {
-            SetUIVisible(currentActiveUI.name, false);    
+            SetUIVisible(currentActiveUI.name, false);
+            Gun gun = GetComponent<PlayerData>().GetGunParent().GetChild(0).GetChild(0).GetComponent<Gun>();
+            gun.SetCanShoot(true);
         }
+    }
+
+    public void AddCraftedItemToCollectionBox(List<RecipeItemAndCount> items, int quantity, string itemName)
+    {
+        if (!collectionBox) return;
+
+        Dictionary<string, int> inventory = collectionBox.GetComponent<CollectionBox>().GetInventory();
+        foreach (var item in items)
+        {
+            if (inventory.ContainsKey(item.item.name) && inventory[item.item.name] >= item.count)
+            {
+                collectionBox.GetComponent<CollectionBox>().AddItemServerRpc(itemName, quantity);
+                collectionBox.GetComponent<CollectionBox>().RemoveItemServerRpc(item.item.name, item.count);
+            }
+        }
+        UpdateItemCount();
+        
+        
+    }
+
+    public void UpdateItemCount()
+    {
+        CollectionBox box = collectionBox.GetComponent<CollectionBox>();
+        Dictionary<string, int> inventory = box.GetInventory();
+
+
+
+        if (inventory.TryGetValue("Green", out var greenCount))
+        {
+            greenResourceText.text = "Green: " + greenCount;
+        }
+        else
+        {
+            greenResourceText.text = "Green: 0";
+        }
+
+        if (inventory.TryGetValue("Blue", out var blueCount))
+        {
+            blueResourceText.text = "Blue: " + blueCount;
+        }
+        else
+        {
+            blueResourceText.text = "Blue: 0";
+        }
+
+        if (inventory.TryGetValue("Red", out var redCount))
+        {
+            redResourceText.text = "Red: " + redCount;
+        }
+        else
+        {
+            redResourceText.text = "Red: 0";
+        }
+
     }
 
     public void SetUIVisible(string name, bool value = true, GameObject interactedWithObject = null)
     {
+        Gun gun = GetComponent<PlayerData>().GetGunParent().GetChild(0).GetChild(0).GetComponent<Gun>();
+        gun.SetCanShoot(false);
+        Debug.Log(gun);
         GetComponent<PlayerLook>().enabled = false;
         switch (name)
         {
             case "CollectionBoxUI":
-
                 if (interactedWithObject)
                 {
                     collectionBox = interactedWithObject;
-                    CollectionBox box = collectionBox.GetComponent<CollectionBox>();
-                    Dictionary<string, int> inventory = box.GetInventory();
-
-
-
-                    if (inventory.TryGetValue("Green", out var greenCount))
-                    {
-                        greenResourceText.text = "Green: " + greenCount;
-                    }
-                    else
-                    {
-                        greenResourceText.text = "Green: 0";
-                    }
-
-                    if (inventory.TryGetValue("Blue", out var blueCount))
-                    {
-                        blueResourceText.text = "Blue: " + blueCount;
-                    }
-                    else
-                    {
-                        blueResourceText.text = "Blue: 0";
-                    }
-
-                    if (inventory.TryGetValue("Red", out var redCount))
-                    {
-                        redResourceText.text = "Red: " + redCount;
-                    }
-                    else
-                    {
-                        redResourceText.text = "Red: 0";
-                    }
+                    UpdateItemCount();
                 }
-                
                 if (value)
                 {
                     Cursor.lockState = CursorLockMode.None;
@@ -142,6 +169,7 @@ public class PlayerInterfaceManager : NetworkBehaviour
                     }
 
                 }
+                GetComponent<Crafting>().ShowRecipes();
                 break;
             case "ConvertPanel":
                 craftPanel.SetActive(false);
