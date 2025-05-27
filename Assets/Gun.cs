@@ -45,8 +45,8 @@ public class Gun : MonoBehaviour
         {
             ammo = gunData.magazineSize;
             cam = transform.parent.parent.parent.gameObject;
-            magCount = 3;
             playerData = transform.parent.parent.parent.parent.parent.parent.GetComponent<PlayerData>();
+            UpdateAmmoCount();
             recoil = transform.parent.parent.parent.parent.GetComponent<Recoil>();
             recoil.SetData(gunData.recoilX, gunData.recoilY, gunData.recoilZ, gunData.snap, gunData.returnSpeed);
             transform.parent.GetComponent<Rigidbody>().isKinematic = true;
@@ -98,6 +98,12 @@ public class Gun : MonoBehaviour
     public int GetMagCount()
     {
         return magCount;
+    }
+
+    public void UpdateAmmoCount()
+    {
+        playerData.gameObject.GetComponent<LootHolder>().DebugInventory();
+        magCount = Mathf.RoundToInt(playerData.gameObject.GetComponent<LootHolder>().inventory["Ammo"] / gunData.magazineSize);
     }
 
 

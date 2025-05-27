@@ -52,7 +52,7 @@ public class CollectionBox : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void InteractedWithServerRpc(bool value)
     {
-        isOccupied.Value = value;
+        //isOccupied.Value = value;
     }
 
     public Dictionary<string, int> GetInventory()
@@ -72,6 +72,8 @@ public class CollectionBox : NetworkBehaviour
         {
             inventory[itemName] = 0;
         }
+
+        
 
         Debug.Log($"Deposited: {itemName}. Total: {inventory[itemName]}");
     }
