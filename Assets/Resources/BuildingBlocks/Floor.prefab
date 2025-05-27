@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6723368202086499891}
   - component: {fileID: 4582229740666180660}
   - component: {fileID: -6975589750074853371}
+  - component: {fileID: -9056687082316761355}
   m_Layer: 0
   m_Name: Floor
   m_TagString: BuildingBlock
@@ -147,3 +148,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31923feea318dab48a43be36fd761c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-9056687082316761355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235177268294843029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da089da707554884b91c8b2a0e409873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materialName: Wood
+  cost: 5

@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 8920339971710017733}
   - component: {fileID: 1461829376666692032}
   - component: {fileID: 1033181521959495769}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 7913467685076308780}
   - component: {fileID: 6673274749778621462}
   - component: {fileID: 4599587195361550394}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlockObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 6264679033279218639}
   - component: {fileID: 7714557225919417143}
   - component: {fileID: 4042000023829741868}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 3259013964161811867}
   - component: {fileID: 563275901954687431}
   - component: {fileID: 3564241624105401015}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Magazin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,7 +481,7 @@ GameObject:
   - component: {fileID: 6837259823647455740}
   - component: {fileID: 3584302324883019700}
   - component: {fileID: 1329785727866078009}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bullets
   m_TagString: Untagged
   m_Icon: {fileID: 0}

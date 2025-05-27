@@ -43,6 +43,7 @@ public class CreateGun : EditorWindow
             childInstance.name = childToAssign.name; // Optional: keep original name
             childInstance.transform.SetParent(parent.transform);
             childInstance.transform.localPosition = Vector3.zero;
+            childInstance.layer = 6;
         }
 
         Selection.activeGameObject = parent;

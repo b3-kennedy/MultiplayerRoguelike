@@ -140,7 +140,6 @@ public class PlayerInterfaceManager : NetworkBehaviour
         if (gun)
         {
             gun.SetCanShoot(false);
-            Debug.Log(gun);
         }
 
         GetComponent<PlayerLook>().enabled = false;

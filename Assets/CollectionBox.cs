@@ -6,9 +6,22 @@ using UnityEngine;
 public class CollectionBox : NetworkBehaviour
 {
 
+    public static CollectionBox Instance;
     public NetworkVariable<bool> isOccupied = new NetworkVariable<bool>(false);
     Dictionary<string, int> inventory = new Dictionary<string, int>();
 
+
+    void Awake()
+    {
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void AddItemServerRpc(string itemName, int amount)
@@ -26,6 +39,7 @@ public class CollectionBox : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RemoveItemServerRpc(string itemName, int amount)
     {
+        Debug.Log(amount);
         if (inventory.ContainsKey(itemName))
         {
             UpdateInventoryClientRpc(itemName, inventory[itemName] - amount);

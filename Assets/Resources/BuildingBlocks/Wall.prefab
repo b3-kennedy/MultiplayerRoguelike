@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3507911930606920177}
   - component: {fileID: 8716614435224014209}
   - component: {fileID: -2725205995844118903}
+  - component: {fileID: -1822181804075642207}
   m_Layer: 0
   m_Name: Wall
   m_TagString: BuildingBlock
@@ -134,3 +135,17 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &-1822181804075642207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930809922531158004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da089da707554884b91c8b2a0e409873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materialName: Wood
+  cost: 5

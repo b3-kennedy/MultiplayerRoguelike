@@ -283,13 +283,18 @@ public class BuildSystem : NetworkBehaviour
             selectedBlock.transform.localEulerAngles += new Vector3(0,90,0);
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        CollectionBox box = CollectionBox.Instance;
+        Block blockScript = selectedBlock.GetComponent<Block>();
+        var boxInventory = box.GetInventory();
+
+        if (Input.GetButtonDown("Fire1") && boxInventory.ContainsKey(blockScript.materialName) && boxInventory[blockScript.materialName] >= blockScript.cost)
         {
             Vector3 blockPos = selectedBlock.transform.position;
             Quaternion blockRot = selectedBlock.transform.rotation;
             string cleanedName = StringManager.RemoveCloneString(selectedBlock.name);
             ServerBuildManager.Instance.BuildServerRpc(cleanedName, blockPos.x, blockPos.y, blockPos.z, blockRot.x, blockRot.y, blockRot.z, blockRot.w);
             ServerManager.Instance.BuildNavmeshServerRpc();
+            box.RemoveItemServerRpc(blockScript.materialName, blockScript.cost);
         }
     }
 
