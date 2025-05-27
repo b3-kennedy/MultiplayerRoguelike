@@ -95,13 +95,12 @@ public class PlayerInterfaceManager : NetworkBehaviour
                 collectionBox.GetComponent<CollectionBox>().RemoveItemServerRpc(item.item.name, item.count);
             }
         }
-        UpdateItemCount();
+        UpdateItemCount(collectionBox.GetComponent<CollectionBox>());
         
     }
 
-    public void UpdateItemCount()
+    public void UpdateItemCount(CollectionBox box)
     {
-        CollectionBox box = collectionBox.GetComponent<CollectionBox>();
         Dictionary<string, int> inventory = box.GetInventory();
 
 
@@ -138,8 +137,12 @@ public class PlayerInterfaceManager : NetworkBehaviour
     public void SetUIVisible(string name, bool value = true, GameObject interactedWithObject = null)
     {
         Gun gun = GetComponent<PlayerData>().GetGunParent().GetChild(0).GetChild(0).GetComponent<Gun>();
-        gun.SetCanShoot(false);
-        Debug.Log(gun);
+        if (gun)
+        {
+            gun.SetCanShoot(false);
+            Debug.Log(gun);
+        }
+
         GetComponent<PlayerLook>().enabled = false;
         switch (name)
         {
@@ -147,7 +150,7 @@ public class PlayerInterfaceManager : NetworkBehaviour
                 if (interactedWithObject)
                 {
                     collectionBox = interactedWithObject;
-                    UpdateItemCount();
+                    UpdateItemCount(collectionBox.GetComponent<CollectionBox>());
                 }
                 if (value)
                 {

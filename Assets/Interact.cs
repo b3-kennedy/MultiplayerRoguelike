@@ -137,11 +137,16 @@ public class Interact : NetworkBehaviour
 
         foreach (var item in holder.inventory.ToList())
         {
+
             string itemName = item.Key;
             int amount = item.Value;
+            if (itemName != "Ammo")
+            {
+                box.AddItemServerRpc(itemName, amount);
+                GetComponent<PlayerInterfaceManager>().UpdateItemCount(box);
+                holder.inventory[itemName] = 0;
+            }
 
-            box.AddItemServerRpc(itemName, amount);
-            holder.inventory[itemName] = 0;
         }
     }
 

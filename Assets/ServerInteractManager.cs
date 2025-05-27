@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ServerInteractManager : NetworkBehaviour
 {
-    public static ServerInteractManager Instance {get; private set;}
+    public static ServerInteractManager Instance { get; private set; }
 
     Dictionary<string, GameObject> guns = new Dictionary<string, GameObject>();
 
     void Awake()
     {
-        
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -36,13 +36,13 @@ public class ServerInteractManager : NetworkBehaviour
             }
         }
 
-        Debug.Log($"Loaded {guns.Count} guns into the dictionary.");        
+        Debug.Log($"Loaded {guns.Count} guns into the dictionary.");
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void PickUpWeaponServerRpc(string gunName, ulong clientId)
     {
-        
+
         PickUpWeaponClientRpc(gunName, clientId);
     }
 
@@ -69,7 +69,7 @@ public class ServerInteractManager : NetworkBehaviour
             gunPos.GetComponent<GunBob>().InitializeGun();
             spawnedGun.GetComponent<Animator>().SetTrigger("pickedup");
             clientPlayer.GetComponent<PlayerInterfaceManager>().OnGunPickup(spawnedGun);
-            
+
         }
     }
 }
