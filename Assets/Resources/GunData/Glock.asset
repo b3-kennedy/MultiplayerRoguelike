@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2923ecb61c2b6fe46abd93d861369ce1, type: 3}
-  m_Name: AK
+  m_Name: Glock
   m_EditorClassIdentifier: 
-  gunName: AK
-  fireRate: 0.2
+  gunName: Glock
+  fireRate: 0.1
   damage: 50
-  magazineSize: 30
-  reloadTime: 2
-  position: {x: -0.134, y: -0.162, z: -0.403}
-  adsPosition: {x: 0, y: -0.044, z: -0.055}
+  magazineSize: 10
+  reloadTime: 1
+  position: {x: -0.134, y: -0.162, z: -0.402}
+  adsPosition: {x: 0, y: -0.042, z: -0.21}
   adsTime: 5
-  penetrationLimit: 3
-  recoilX: -5
+  penetrationLimit: 1
+  recoilX: -2
   recoilY: 2
   recoilZ: 0.35
   snap: 6

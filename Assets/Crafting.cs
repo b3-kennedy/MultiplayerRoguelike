@@ -3,7 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Crafting : MonoBehaviour
+public class Crafting : NetworkBehaviour
 {
     public Dictionary<Recipe, List<RecipeItemGroup>> weaponsMaterialsRecipes = new Dictionary<Recipe, List<RecipeItemGroup>>();
     PlayerInterfaceManager playerInterfaceManager;
@@ -134,19 +134,33 @@ public class Crafting : MonoBehaviour
 
         itemUI.craftButton.onClick.AddListener(delegate
         {
-            CraftItem(selectedGroup.items, itemUI.itemCount, recipe.recipeName, recipeType);
+            CraftItem(selectedGroup.items, itemUI.itemCount, recipe.recipeName, recipeType, recipe);
         });
 
     }
 
-    public void SortRecipes(GameObject collectionBox)
-    {
 
-    }
 
-    void CraftItem(List<RecipeItemAndCount> itemAndCount, int quantity, string itemName, Recipe.RecipeType recipeType)
+    void CraftItem(List<RecipeItemAndCount> itemAndCount, int quantity, string itemName, Recipe.RecipeType recipeType, Recipe recipe)
     {
-        if (recipeType == Recipe.RecipeType.CONVERT)
+        if (recipe.craftedItem)
+        {
+            //gun layer
+            if (recipe.craftedItem.layer == 6)
+            {
+                Transform gunParent = GetComponent<PlayerData>().GetGunParent();
+                if (gunParent.childCount == 2)
+                {
+                    Destroy(gunParent.GetChild(0));
+                    ServerInteractManager.Instance.PickUpWeaponServerRpc(recipe.craftedItem.name, NetworkManager.Singleton.LocalClientId);
+                }
+                else
+                {
+                    ServerInteractManager.Instance.PickUpWeaponServerRpc(recipe.craftedItem.name, NetworkManager.Singleton.LocalClientId);
+                }
+            }
+        }
+        else if (recipeType == Recipe.RecipeType.CONVERT)
         {
             GetComponent<PlayerInterfaceManager>().AddCraftedItemToCollectionBox(itemAndCount, quantity, itemName);
         }

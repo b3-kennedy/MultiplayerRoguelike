@@ -20,9 +20,12 @@ public class RecipeItemGroup
 [CreateAssetMenu(fileName = "Recipe", menuName = "Scriptable Objects/Recipe")]
 public class Recipe : ScriptableObject
 {
-    public enum RecipeType {CONVERT, CRAFTING};
+    public enum RecipeType { CONVERT, CRAFTING };
     public RecipeType type;
     public string recipeName;
     public List<RecipeItemGroup> recipeItems;
+
+    [Header("Leave this empty if no item is needed")]
+    public GameObject craftedItem;
 
 }

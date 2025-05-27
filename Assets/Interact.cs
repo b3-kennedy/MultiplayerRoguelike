@@ -33,7 +33,9 @@ public class Interact : NetworkBehaviour
     {
         cam = GetComponent<PlayerData>().GetCameraGameObject();
         playerInterfaceManager = GetComponent<PlayerInterfaceManager>();
-        
+
+        //ServerInteractManager.Instance.PickUpWeaponServerRpc("Glock", NetworkManager.Singleton.LocalClientId);
+
     }
 
     // Update is called once per frame

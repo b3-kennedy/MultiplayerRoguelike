@@ -8,8 +8,13 @@ public class LootHolder : NetworkBehaviour
 
     void Start()
     {
-        AddItemServerRpc("Ammo", NetworkManager.Singleton.LocalClientId, 100);
+        ServerInteractManager.Instance.PickUpWeaponServerRpc("Glock", NetworkManager.Singleton.LocalClientId);
+    }
 
+    public override void OnNetworkSpawn()
+    {
+        AddItemServerRpc("Ammo", NetworkManager.Singleton.LocalClientId, 100);
+        
         Transform gunParent = GetComponent<PlayerData>().GetGunParent();
         for (int i = 0; i < gunParent.childCount; i++)
         {

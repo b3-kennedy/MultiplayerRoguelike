@@ -3364,6 +3364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38a458c6c26035d468e327e85ced0708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   weaponsMaterialParent: {fileID: 7598699286472037039}
   craftingMaterialParent: {fileID: 3463277208761700325}
   itemCraftingUIElement: {fileID: 4866173091246241263, guid: 564b409c55b96e34f8410cb501b109ed, type: 3}
