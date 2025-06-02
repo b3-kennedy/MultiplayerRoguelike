@@ -4,6 +4,7 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 public class Gun : MonoBehaviour
@@ -38,6 +39,9 @@ public class Gun : MonoBehaviour
     bool canShoot = true;
 
     RaycastHit[] hitBuffer = new RaycastHit[10];
+
+    [HideInInspector] public UnityEvent sightAttached;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -67,7 +71,7 @@ public class Gun : MonoBehaviour
             transform.parent.GetComponent<Rigidbody>().isKinematic = false;
             transform.parent.GetComponent<Collider>().enabled = true;
         }
-        
+
     }
 
     public void SetCanShoot(bool value)
@@ -106,6 +110,36 @@ public class Gun : MonoBehaviour
         magCount = Mathf.RoundToInt(playerData.gameObject.GetComponent<LootHolder>().inventory["Ammo"] / gunData.magazineSize);
     }
 
+    public void EquipAttachment(GameObject attachment)
+    {
+        GameObject spawnedAttachment = Instantiate(attachment);
+        Attachment attachmentScript = spawnedAttachment.GetComponent<Attachment>();
+
+        Debug.Log(spawnedAttachment);
+
+        switch (attachmentScript.type)
+        {
+            case Attachment.AttachmentType.SIGHT:
+                Transform sightSlot = transform.Find("Attachments/Sight");
+                spawnedAttachment.transform.SetParent(sightSlot);
+                sightAttached.Invoke();
+
+                break;
+            case Attachment.AttachmentType.BARREL:
+                Transform barrelSlot = transform.Find("Attachments/Barrel");
+                spawnedAttachment.transform.SetParent(barrelSlot);
+                break;
+            case Attachment.AttachmentType.UNDERBARREL:
+                Transform underbarrelSlot = transform.Find("Attachments/Underbarrel");
+                spawnedAttachment.transform.SetParent(underbarrelSlot);
+                break;
+        }
+
+        spawnedAttachment.transform.localPosition = Vector3.zero + attachmentScript.positionOffset;
+        spawnedAttachment.transform.localEulerAngles = Vector3.zero;
+        spawnedAttachment.transform.localScale = Vector3.one;
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -114,7 +148,7 @@ public class Gun : MonoBehaviour
 
         Aiming();
         Shoot();
-        Reload();        
+        Reload();
     }
 
     public void Recoil()
@@ -144,12 +178,23 @@ public class Gun : MonoBehaviour
                 playerInterfaceManager.UpdateAmmoText(ammo);
 
             }
-         }
+        }
     }
 
     public virtual void Shoot()
     {
 
+    }
+
+    public Attachment GetSightAttachment()
+    {
+        return transform.Find("Attachments/Sight").transform.GetChild(0).gameObject.GetComponent<Attachment>();
+    }
+
+    public bool HasSight()
+    {
+        Transform sightSlot = transform.Find("Attachments/Sight");
+        return sightSlot.childCount > 0;
     }
 
     public bool IsADS()
@@ -214,7 +259,14 @@ public class Gun : MonoBehaviour
         }
 
         aimProgress = Mathf.Clamp01(aimProgress);
-
-        transform.parent.localPosition = Vector3.Lerp(gunData.position, gunData.adsPosition, aimProgress);
+        if (HasSight())
+        {
+            transform.parent.localPosition = Vector3.Lerp(gunData.position, gunData.adsPosition + GetSightAttachment().adsOffset, aimProgress);
+        }
+        else
+        {
+            transform.parent.localPosition = Vector3.Lerp(gunData.position, gunData.adsPosition, aimProgress);
+        }
+        
     }
 }

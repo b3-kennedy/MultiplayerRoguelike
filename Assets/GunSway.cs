@@ -77,6 +77,10 @@ public class GunSway : MonoBehaviour
 
             transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRot, Time.deltaTime * smoothing);
         }
+        else if (gunScript.IsADS())
+        {
+            transform.localEulerAngles = new Vector3(0f,180f,0f);
+        }
 
     }
 

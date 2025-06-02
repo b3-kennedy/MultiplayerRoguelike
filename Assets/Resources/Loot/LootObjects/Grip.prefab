@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4093648858189020}
   - component: {fileID: 33942932946509708}
   - component: {fileID: 23851628995562092}
+  - component: {fileID: -6139124619070590755}
   m_Layer: 0
-  m_Name: vertical_Grip_03
+  m_Name: Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,3 +87,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-6139124619070590755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1688879638031654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f5e78b28542c284b836c16a51c6318c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+  positionOffset: {x: 0, y: 0, z: 0}
+  adsOffset: {x: 0, y: 0, z: 0}
