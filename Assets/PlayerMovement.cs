@@ -167,7 +167,7 @@ public class PlayerMovement : NetworkBehaviour
 
         if (wasAirborne && grounded)
         {
-            OnLand();
+            //OnLand();
             wasAirborne = false;
         }
 
